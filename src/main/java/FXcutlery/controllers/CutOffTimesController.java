@@ -15,9 +15,9 @@ public class CutOffTimesController {
 
     @GetMapping("/cutoff-time")
     public ResponseEntity<CurrencyDto> cutOffTime(@RequestParam("date") String date,
-                           @RequestParam("from") String isoFrom,
-                           @RequestParam("to") String isoTo) {
-        final String cutOffTimeToday = service.getCutOffTime(isoFrom, isoTo, date).toString();
+                           @RequestParam("base") String baseIso,
+                           @RequestParam("quote") String quoteIso) {
+        final String cutOffTimeToday = service.getCutOffTime(baseIso, quoteIso, date).toString();
         return ResponseEntity.ok().body(new CurrencyDto(cutOffTimeToday));
     }
 }

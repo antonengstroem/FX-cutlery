@@ -16,6 +16,8 @@ public class Currency {
     private String tomorrow;
     private String afterTomorrow;
 
+    public Currency() {}
+
     public enum CutOffTimeEnum {
         NEVER_POSSIBLE("never possible"),
         ALWAYS_POSSIBLE("always possible");

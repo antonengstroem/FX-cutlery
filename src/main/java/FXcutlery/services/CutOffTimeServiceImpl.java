@@ -13,39 +13,41 @@ import java.time.LocalTime;
 public class CutOffTimeServiceImpl implements CutOffTimeService {
     @Autowired
     private CutOffTimeRepository repo;
+    private static final String ISO_CANNOT_BE_TRADED_ON_DATE_MESSAGE = "Currency with ISO '%s' cannot be traded on chosen date";
+    private static final String ILLEGAL_DATE_VALUE_MESSAGE = "Illegal date value, only 'today', 'tomorrow' or 'after tomorrow' allowed";
+    private static final String BASE_ISO_DOES_NOT_EXIST = "Base currency ISO: '%s' does not exist";
+    private static final String QUOTE_ISO_DOES_NOT_EXIST = "Quote currency ISO: '%s' does not exist";
 
-    public LocalTime getCutOffTime(String isoFrom, String isoTo, String date) throws IllegalArgumentException {
-        final Currency currencyFrom = repo.findById(isoFrom.toLowerCase()).orElseThrow(
-                        () -> new InvalidIsoCodeException(String.format("ISO 'from' value: '%s' does not exist", isoFrom)));
+    public LocalTime getCutOffTime(String baseIso, String quoteIso, String date) throws IllegalArgumentException {
+        final Currency baseCurrency = repo.findById(baseIso.toLowerCase()).orElseThrow(
+                        () -> new InvalidIsoCodeException(String.format(BASE_ISO_DOES_NOT_EXIST, baseIso)));
 
-        final Currency currencyTo = repo.findById(isoTo.toLowerCase()).orElseThrow(
-                () -> new InvalidIsoCodeException(String.format("ISO 'to' value: '%s' does not exist", isoTo)));
+        final Currency quoteCurrency = repo.findById(quoteIso.toLowerCase()).orElseThrow(
+                () -> new InvalidIsoCodeException(String.format(QUOTE_ISO_DOES_NOT_EXIST, quoteIso)));
 
-        final String unparsedTimeIsoFrom = getTimeFromCurrencyByDate(currencyFrom, date);
-        final String unparsedTimeIsoTo = getTimeFromCurrencyByDate(currencyTo, date);
+        final String unparsedTimeOfBase = getCutOffTimeOfCurrencyByDate(baseCurrency, date);
+        final String unparsedTimeOfQuote = getCutOffTimeOfCurrencyByDate(quoteCurrency, date);
 
-        final LocalTime parsedTimeFrom = parseToDigitalTime(unparsedTimeIsoFrom, isoFrom);
-        final LocalTime parsedTimeTo = parseToDigitalTime(unparsedTimeIsoTo, isoTo);
+        final LocalTime parsedTimeOfBase = parseToDigitalTime(unparsedTimeOfBase, baseIso);
+        final LocalTime parsedTimeOfQuote = parseToDigitalTime(unparsedTimeOfQuote, quoteIso);
 
-        return parsedTimeFrom.compareTo(parsedTimeTo) < 0 ? parsedTimeFrom : parsedTimeTo;
+        return parsedTimeOfBase.compareTo(parsedTimeOfQuote) < 0 ? parsedTimeOfBase : parsedTimeOfQuote;
     }
 
     private LocalTime parseToDigitalTime(String unparsedTime, String iso) {
         if(unparsedTime.toLowerCase().equals(Currency.CutOffTimeEnum.NEVER_POSSIBLE.label)) {
-            throw new IsoNotTradeableOnDateException(String.format("ISO '%s' cannot be traded on chosen date", iso));
+            throw new IsoNotTradeableOnDateException(String.format(ISO_CANNOT_BE_TRADED_ON_DATE_MESSAGE, iso));
         }
 
-        return unparsedTime.toLowerCase()
-                .equals(Currency.CutOffTimeEnum.ALWAYS_POSSIBLE.label) ? LocalTime.MAX
+        return unparsedTime.toLowerCase().equals(Currency.CutOffTimeEnum.ALWAYS_POSSIBLE.label) ? LocalTime.MAX
                 : LocalTime.parse(unparsedTime);
     }
 
-    private String getTimeFromCurrencyByDate(Currency currency, String date) throws IllegalArgumentException {
+    private String getCutOffTimeOfCurrencyByDate(Currency currency, String date) throws IllegalArgumentException {
         final Currency.CutOffDateEnum cutOffDateEnum = Currency.CutOffDateEnum.fromString(date);
 
         if (cutOffDateEnum == null) {
-            throw new InvalidDateException(
-                    "Illegal date value, only 'today', 'tomorrow' or 'after tomorrow' allowed");
+            throw new InvalidDateException(ILLEGAL_DATE_VALUE_MESSAGE);
         }
 
         switch (cutOffDateEnum) {
@@ -56,8 +58,7 @@ public class CutOffTimeServiceImpl implements CutOffTimeService {
             case AFTER_TOMORROW:
                 return currency.getAfterTomorrow();
             default:
-                throw new InvalidDateException(
-                        "Illegal date value, only 'today', 'tomorrow' or 'after tomorrow' allowed");
+                throw new InvalidDateException(ILLEGAL_DATE_VALUE_MESSAGE);
         }
     }
 }
