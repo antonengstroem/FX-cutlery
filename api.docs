@@ -9,7 +9,7 @@ This api returns cut-off times for currency pairs on a given date.
 ### Request Parameters
 The definitions uses following format: [Parameter name, Type, Description, Required].
 [date, String, The date for which the cut-off time is requested. Accepts 'today',
-    'tomorrow', or 'after tomorrow', Required]
+    'tomorrow', or 'after%20tomorrow', Required]
 [from, String, The ISO code of the base currency, Required]
 [to, String, The ISO code of the quote currency, Required]
 
