@@ -7,11 +7,12 @@ This api returns cut-off times for currency pairs on a given date.
 'GET /cutoff-time'
 
 ### Request Parameters
-The definitions uses following format: [Parameter name, Type, Description, Required].
-[date, String, The date for which the cut-off time is requested. Accepts 'today',
-    'tomorrow', or 'after%20tomorrow', Required]
-[from, String, The ISO code of the base currency, Required]
-[to, String, The ISO code of the quote currency, Required]
+| Parameter | Type   | Description                                              | Required |
+|-----------|--------|----------------------------------------------------------|----------|
+| date      | String | The date for which the cut-off time is requested. Accepts 'today', 'tomorrow', or 'after tomorrow'. | Yes      |
+| from      | String | The ISO code of the base currency.                       | Yes      |
+| to        | String | The ISO code of the quote currency.                      | Yes      |
+
 
 ### Response
 The API returns a JSON object. If successful the json contains the cut off time for the currency pair on the given day.
@@ -19,6 +20,7 @@ In the case that there is no cut off time for the given currency pair, the java.
 will be returned. This is to streamline response data handling.
 
 See examples below:
+
     1. successful call:
         URI: /cutoff-time?date=tomorrow&from=cnh&to=dkk
         JSON: {"cutOffTime":"14:00"}
@@ -40,6 +42,6 @@ as the cause of the error.
 
 The following error Scenarios are handled:
 
-1. Invalid 'date' parameter value.
-2. Invalid 'from' or/or 'to' values.
-3. ISO not tradable on selected date
+    1. Invalid 'date' parameter value.
+    2. Invalid 'from' or/or 'to' values.
+    3. ISO not tradable on selected date
