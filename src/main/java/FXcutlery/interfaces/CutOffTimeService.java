@@ -3,5 +3,5 @@ package FXcutlery.interfaces;
 import java.time.LocalTime;
 
 public interface CutOffTimeService {
-    LocalTime getCutOffTime(String cutOffTime1, String cutOffTime2);
+    LocalTime getCutOffTime(String isoFrom, String isoTo, String date);
 }

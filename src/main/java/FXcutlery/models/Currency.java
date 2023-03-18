@@ -18,10 +18,31 @@ public class Currency {
         NEVER_POSSIBLE("never possible"),
         ALWAYS_POSSIBLE("always possible");
 
-        private String possible;
+        public final String label;
 
-        private CutOffTimeEnum(String whenPossible) {
-            this.possible = whenPossible;
+        CutOffTimeEnum(String label) {
+            this.label = label;
+        }
+    }
+
+    public enum CutOffDateEnum {
+        TODAY("today"),
+        TOMORROW("tomorrow"),
+        AFTER_TOMORROW("after tomorrow");
+
+        private final String relativeDate;
+
+        CutOffDateEnum(String relativeDate) {
+            this.relativeDate = relativeDate;
+        }
+
+        public static CutOffDateEnum fromString(String date) {
+            for (CutOffDateEnum b : CutOffDateEnum.values()) {
+                if (b.relativeDate.equalsIgnoreCase(date)) {
+                    return b;
+                }
+            }
+            return null;
         }
     }
 }

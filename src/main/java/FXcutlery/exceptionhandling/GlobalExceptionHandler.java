@@ -19,4 +19,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IsoNotTradeableOnDateException.class)
+    public ResponseEntity<ApiError> handleIsoNotTradeableOnDateException(
+            IsoNotTradeableOnDateException isoNotTradeableOnDateException) {
+        final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, isoNotTradeableOnDateException.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
 }
