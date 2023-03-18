@@ -44,7 +44,7 @@ public class CutOffTimeServiceImplTest {
     }
 
     @Test
-    void getCutOffTimeToday() {
+    void getCutOffTimeTomorrow() {
         assertEquals(cutOffTimeService.getCutOffTime("aed", "huf", "tomorrow").toString(), "14:00");
     }
 }
