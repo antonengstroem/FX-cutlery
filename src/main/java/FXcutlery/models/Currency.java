@@ -1,10 +1,12 @@
 package FXcutlery.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @Entity
+@AllArgsConstructor
 @Table(name = "currency_cutoff")
 public class Currency {
     @Id
