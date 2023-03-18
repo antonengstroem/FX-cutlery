@@ -39,9 +39,9 @@ public class Currency {
         }
 
         public static CutOffDateEnum fromString(String date) {
-            for (CutOffDateEnum b : CutOffDateEnum.values()) {
-                if (b.relativeDate.equalsIgnoreCase(date)) {
-                    return b;
+            for (CutOffDateEnum cutOffDateEnum : CutOffDateEnum.values()) {
+                if (cutOffDateEnum.relativeDate.equalsIgnoreCase(date)) {
+                    return cutOffDateEnum;
                 }
             }
             return null;
